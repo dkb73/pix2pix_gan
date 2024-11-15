@@ -18,9 +18,10 @@ class MapDataset(Dataset):
         img_file = self.list_files[index]
         img_path = os.path.join(self.root_dir, img_file)
         image = np.array(Image.open(img_path))
+        # print(f"image shape {image.shape}")
         h, w, _ = image.shape
-        input_image = image[:, :w//2, :]
-        target_image = image[:, w//2:w, :]
+        input_image = image[:, w//2:w, :]
+        target_image = image[:, 0:w//2, :]
 
         augmentations = config.both_transform(image=input_image, image0=target_image)
         input_image = augmentations["image"]
@@ -34,7 +35,7 @@ class MapDataset(Dataset):
 
 if __name__ == "__main__":
     dataset = MapDataset("data/data/train/")
-    loader = DataLoader(dataset, batch_size=5)
+    loader = DataLoader(dataset, batch_size=1)
     for x, y in loader:
         print(x.shape)
         save_image(x, "x.png")
